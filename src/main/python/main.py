@@ -1,9 +1,9 @@
 import sys
 
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QSystemTrayIcon, QMenu, QAction, QWidget, QWidgetAction, QSlider
+from PyQt5.QtWidgets import QSystemTrayIcon, QMenu, QAction, QWidget, QWidgetAction, QSlider, QApplication, QLabel, \
+    QVBoxLayout
 from PyQt5.QtCore import Qt
-from fbs_runtime.application_context.PyQt5 import ApplicationContext
 from shutil import copyfile
 import contextlib
 import os
@@ -73,11 +73,11 @@ class AudioMenuItem(QAction):
 class CadmusApplication(QSystemTrayIcon):
     control_level = 50
 
-    def __init__(self, app_context, parent=None):
+    def __init__(self, parent=None):
+
         QSystemTrayIcon.__init__(self, parent)
-        self.app_context = app_context
-        self.enabled_icon = QIcon(app_context.get_resource("icon_enabled.png"))
-        self.disabled_icon = QIcon(app_context.get_resource("icon_disabled.png"))
+        self.enabled_icon = QIcon("../resources/base/icon_enabled.png")
+        self.disabled_icon = QIcon("../resources/base/icon_disabled.png")
         self.cadmus_lib_path = ""
 
         self.disable_suppression_menu = QAction("Disable Noise Suppression")
@@ -108,9 +108,9 @@ class CadmusApplication(QSystemTrayIcon):
 
         self.cadmus_lib_path = os.path.join(cadmus_cache_path, "librnnoise_ladspa.so")
 
-        copyfile(
-            self.app_context.get_resource("librnnoise_ladspa.so"), self.cadmus_lib_path
-        )
+        # copyfile(
+        #     "resources/librnnoise_ladspa.so", self.cadmus_lib_path
+        # )
 
     def gui_setup(self):
         main_menu = QMenu()
@@ -154,14 +154,17 @@ class CadmusApplication(QSystemTrayIcon):
 
     def quit(self):
         self.disable_noise_suppression()
-        self.app_context.app.quit()
+        # self.app_context.app.quit()
 
 
 if __name__ == "__main__":
-    cadmus_context = ApplicationContext()
+    #cadmus_context = ApplicationContext()
+    app = QApplication([])
     parent_widget = QWidget()
 
-    icon = CadmusApplication(cadmus_context, parent_widget)
+    icon = CadmusApplication(parent_widget)
     icon.show()
 
-    sys.exit(cadmus_context.app.exec_())
+    app.exec()
+
+    #sys.exit(cadmus_context.app.exec_())
