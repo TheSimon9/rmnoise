@@ -33,9 +33,9 @@ class CadmusPulseInterface:
         )
         pulse.module_load(
             "module-ladspa-sink",
-            "sink_name=mic_raw_in sink_master=mic_denoised_out label=noise_suppressor_mono plugin=%s control=%d "
+            "sink_name=mic_raw_in sink_master=mic_denoised_out label=noise_suppressor_mono plugin=%s control=50,1,1,2,5 "
             "sink_properties=\"device.description='Cadmus Raw Microphone Redirect'\""
-            % (cadmus_lib_path, CadmusApplication.control_level),
+            % (cadmus_lib_path),
         )
 
         pulse.module_load(
@@ -106,7 +106,7 @@ class CadmusApplication(QSystemTrayIcon):
         if not os.path.exists(cadmus_cache_path):
             os.makedirs(cadmus_cache_path)
 
-        self.cadmus_lib_path = os.path.join(cadmus_cache_path, "librnnoise_ladspa.so")
+        self.cadmus_lib_path = os.path.join(cadmus_cache_path, "librnnoise_ladspa.dylib")
 
         # copyfile(
         #     "resources/librnnoise_ladspa.so", self.cadmus_lib_path
